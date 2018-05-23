@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+        <script
+            src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
+        <script type="text/javascript" src="./timeline.js"></script>
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <style>
+            body { font-family: Arial, Helvetica, sans-serif; font-size:12px; }
+            #timeline-container { width:100%; overflow-x:scroll; overflow-y:hidden; }
+            #timeline-inner-container { width:5000px; position:relative; height:200px; }
+            .segment { position:absolute; background-color:#000; height:50px; opacity:0.8; cursor:pointer; }
+            .segment .segment-details { position:absolute; display:block; font-size:11px; color:#fff; padding:5px; bottom:0px; right:0px; }
+            .segment .segment-title { position:absolute; display:block; font-size:11px; color:#fff; padding:5px; top:0px; right:0px; }
+       
+            /* width */
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1; 
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #888; 
+            }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555; 
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="timeline-container">
+                        <div id="timeline-inner-container">
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-md-12">
+                    <button id="btnSingleLine" class="btn btn-primary">Single Line</button>
+                    <button id="btnMultiLine" class="btn btn-primary">Multi Line</button>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>
