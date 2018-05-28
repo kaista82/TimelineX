@@ -1,4 +1,5 @@
 type ResizeCallback = (s: number, e: number) => any;
+var _highestZ : number = 100000;
 
 class Timeline { 
     public Segments: Array<Segment> = new Array<Segment>();
@@ -76,14 +77,14 @@ class Segment {
             _dragging = true;
             _lastX = ev.clientX;
 
-            var _allSegments = document.getElementsByClassName("segment");
-            for(var i=0;i<_allSegments.length;i++)
-            {
-                (<HTMLElement>_allSegments[i]).style.zIndex = (10000 - i).toString();
-                //_allSegments[i].classList.remove("topmost");
-            }
+            // var _allSegments = document.getElementsByClassName("segment");
+            // for(var i=0;i<_allSegments.length;i++)
+            // {
+            //     (<HTMLElement>_allSegments[i]).style.zIndex = (9999 - i).toString();
+            // }
 
-            _segmentElement.style.zIndex = "10000";
+            _highestZ = _highestZ + 10;
+            _segmentElement.style.zIndex = _highestZ.toString();
         }; 
 
         _self.container.addEventListener("mousemove", function(ev) {

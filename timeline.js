@@ -1,4 +1,5 @@
 "use strict";
+var _highestZ = 100000;
 var Timeline = /** @class */ (function () {
     function Timeline(containerId) {
         this.Segments = new Array();
@@ -48,12 +49,13 @@ var Segment = /** @class */ (function () {
         _segmentElement.onmousedown = function (ev) {
             _dragging = true;
             _lastX = ev.clientX;
-            var _allSegments = document.getElementsByClassName("segment");
-            for (var i = 0; i < _allSegments.length; i++) {
-                _allSegments[i].style.zIndex = (10000 - i).toString();
-                //_allSegments[i].classList.remove("topmost");
-            }
-            _segmentElement.style.zIndex = "10000";
+            // var _allSegments = document.getElementsByClassName("segment");
+            // for(var i=0;i<_allSegments.length;i++)
+            // {
+            //     (<HTMLElement>_allSegments[i]).style.zIndex = (9999 - i).toString();
+            // }
+            _highestZ = _highestZ + 10;
+            _segmentElement.style.zIndex = _highestZ.toString();
         };
         _self.container.addEventListener("mousemove", function (ev) {
             if (_dragging) {
