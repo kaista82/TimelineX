@@ -79,10 +79,11 @@ class Segment {
             var _allSegments = document.getElementsByClassName("segment");
             for(var i=0;i<_allSegments.length;i++)
             {
-                console.log(_allSegments[i].classList.remove("topmost"));
+                (<HTMLElement>_allSegments[i]).style.zIndex = (10000 - i).toString();
+                //_allSegments[i].classList.remove("topmost");
             }
 
-            _segmentElement.classList.add("topmost");
+            _segmentElement.style.zIndex = "10000";
         }; 
 
         _self.container.addEventListener("mousemove", function(ev) {
