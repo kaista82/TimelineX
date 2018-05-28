@@ -15,12 +15,16 @@ var Timeline = /** @class */ (function () {
         //     $(x).animate({ top: (c) * $(x).height() + "px"}, 1000);
         //     c++;
         // });
+        var _allSegments = document.getElementsByClassName("segment");
+        for (var i = 0; i < _allSegments.length; i++) {
+            _allSegments[i].style.top = i * _allSegments[i].clientHeight + "px";
+        }
     };
     Timeline.prototype.singleline = function () {
-        // $(".segment").each(function(i: number, x: any){
-        //     $(x).animate({ top: "0px" }, 1000);
-        // });
-        // $(".segment").css("top", "0px");
+        var _allSegments = document.getElementsByClassName("segment");
+        for (var i = 0; i < _allSegments.length; i++) {
+            _allSegments[i].style.top = "0px";
+        }
     };
     return Timeline;
 }());
@@ -49,6 +53,10 @@ var Segment = /** @class */ (function () {
         _segmentElement.onmousedown = function (ev) {
             _dragging = true;
             _lastX = ev.clientX;
+            var _allSegments = document.getElementsByClassName("segment");
+            for (var i = 0; i < _allSegments.length; i++) {
+                console.log(_allSegments[i].classList.remove("topmost"));
+            }
             _segmentElement.classList.add("topmost");
         };
         _self.container.addEventListener("mousemove", function (ev) {
@@ -59,11 +67,9 @@ var Segment = /** @class */ (function () {
         });
         _self.container.addEventListener("mouseup", function (ev) {
             _dragging = false;
-            _segmentElement.classList.remove("topmost");
         });
         _segmentElement.addEventListener("mouseup", function (ev) {
             _dragging = false;
-            _segmentElement.classList.remove("topmost");
         });
         if (updateCallback != undefined && updateCallback != null)
             this.updateCallback = updateCallback;
