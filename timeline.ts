@@ -17,11 +17,6 @@ class Timeline {
 
     public multiline()
     {
-        //let c = 0;
-        // $(".segment").each(function(i: number, x: any){
-        //     $(x).animate({ top: (c) * $(x).height() + "px"}, 1000);
-        //     c++;
-        // });
         var _allSegments = document.getElementsByClassName("segment");
         for(var i=0;i<_allSegments.length;i++)
         {
