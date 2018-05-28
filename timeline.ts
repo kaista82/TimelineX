@@ -75,51 +75,26 @@ class Segment {
         _segmentElement.onmousedown = (ev) => {
             _dragging = true;
             _lastX = ev.clientX;
-            _segmentElement.style.zIndex = "9999";
-        };
+            _segmentElement.classList.add("topmost");
+        }; 
 
-        _segmentElement.onmousemove = (ev) => {
+        _self.container.addEventListener("mousemove", function(ev) {
             if (_dragging)
             {
                 _segmentElement.style.left =  (_segmentElement.offsetLeft - (_lastX - ev.clientX)).toString() + "px";
                 _lastX = ev.clientX;
             } 
-        };
+        });
 
-        _segmentElement.onmouseup = (ev) => {
+        _self.container.addEventListener("mouseup", function (ev) {
             _dragging = false;
-        };
+            _segmentElement.classList.remove("topmost");
+        });
 
-        _segmentElement.onmouseout = (ev) => {
+        _segmentElement.addEventListener("mouseup", function (ev) {
             _dragging = false;
-        };
-        
-
-        //_self.hostElement = $("<div class=\"segment\"><span class=\"segment-title\"></span><span class=\"segment-details\"></span></div>");
-        //_self.hostElement.data("timeline-segment", _self);
-
-        // _self.hostElement.draggable({ 
-        //     axis: 'x',
-        //     containment: containerId,
-        //     drag: function() {
-        //         _self.start = _self.hostElement.position().left;
-        //         _self.end = _self.hostElement.position().left + _self.hostElement.width();
-
-        //         _self.updateInfo();
-        //     }
-        // });
-
-        // _self.hostElement.resizable({
-        //     axis: 'x',
-        //     containment: containerId,
-        //     resize: function() {
-        //         _self.start = _self.hostElement.position().left;
-        //         _self.end = _self.hostElement.position().left + _self.hostElement.width();
-
-        //         _self.updateInfo();
-        //     },
-        //     handles: "e,w"
-        // });
+            _segmentElement.classList.remove("topmost");
+        });
 
         if (updateCallback != undefined && updateCallback != null)
             this.updateCallback = updateCallback;
@@ -138,8 +113,6 @@ class Segment {
  
     updateInfo()
     {
-        //this.hostElement.find(".segment-details").text("s:" + this.start + ", e:" + this.end + ", l:" + this.length);
-        
         if (this.updateCallback)
             this.updateCallback(this.start, this.end);
     }
@@ -156,33 +129,22 @@ class Segment {
 
 var _t = new Timeline("timeline-inner-container");
 
-$(document).ready(function(){
+document.addEventListener("DOMContentLoaded", function(event) {
 
     let _segment = _t.createSegment("Number 1", 100, 500, function(s, e) {
         console.log("element1 " + s + " " + e)
     });
-    //_segment.init();
 
     let _segment2 = _t.createSegment("Number 2", 50, 150, function(s, e) {
         console.log("element2 " + s + " " + e)
     });
-    //_segment2.init();
 
     let _segment3 = _t.createSegment("Number 3", 500, 550, function(s, e) {
         console.log("element3 " + s + " " + e)
     });
-    //_segment3.init();
 
     let _segment4 = _t.createSegment("Number 4", 550, 4000, function(s, e) {
         console.log("element4 " + s + " " + e)
     });
-    //_segment4.init();
 
-    // $("#btnMultiLine").click(function(){
-    //     _t.multiline();
-    // });
-    
-    // $("#btnSingleLine").click(function(){
-    //     _t.singleline();
-    // });
 });
