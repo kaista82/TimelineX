@@ -17,7 +17,7 @@ class Timeline {
 
     public multiline()
     {
-        let c = 0;
+        //let c = 0;
         // $(".segment").each(function(i: number, x: any){
         //     $(x).animate({ top: (c) * $(x).height() + "px"}, 1000);
         //     c++;
@@ -26,11 +26,11 @@ class Timeline {
 
     public singleline()
     {
-        $(".segment").each(function(i: number, x: any){
-            $(x).animate({ top: "0px" }, 1000);
-        });
+        // $(".segment").each(function(i: number, x: any){
+        //     $(x).animate({ top: "0px" }, 1000);
+        // });
         
-        $(".segment").css("top", "0px");
+        // $(".segment").css("top", "0px");
     }
 }
 
@@ -39,7 +39,7 @@ class Segment {
     private start: number = 0;
     private end: number = 0;
 
-    private container: any;
+    private container: HTMLElement;
     private hostElement: any;
     public updateCallback: ResizeCallback;
 
@@ -53,57 +53,92 @@ class Segment {
         _self.title = title;        
         _self.start = start;
         _self.end = end;
-        _self.container = $(containerId);
+        _self.container = document.getElementById(containerId);
 
-        _self.hostElement = $("<div class=\"segment\"><span class=\"segment-title\"></span><span class=\"segment-details\"></span></div>");
-        _self.hostElement.data("timeline-segment", _self);
+        var _segmentElement = document.createElement("div");
+        _segmentElement.setAttribute("class", "segment");
+        
+        var _segmentTitleElement = document.createElement("span");
+        _segmentTitleElement.setAttribute("class", "segment-details");
+        _segmentTitleElement.innerHTML = _self.title;
+        _segmentElement.appendChild(_segmentTitleElement);
 
-        _self.container.append(_self.hostElement);
+        _self.hostElement = _segmentElement
 
-        _self.hostElement.draggable({ 
-            axis: 'x',
-            containment: containerId,
-            drag: function() {
-                _self.start = _self.hostElement.position().left;
-                _self.end = _self.hostElement.position().left + _self.hostElement.width();
+        _self.hostElement.style.backgroundColor = this.getRandomColor();
+        _self.container.appendChild(_self.hostElement);
 
-                _self.updateInfo();
-            }
-        });
+        var _dragging : boolean = false;
+        var _lastX : number;
+        var _initialX : number;
 
-        _self.hostElement.resizable({
-            axis: 'x',
-            containment: containerId,
-            resize: function() {
-                _self.start = _self.hostElement.position().left;
-                _self.end = _self.hostElement.position().left + _self.hostElement.width();
+        _segmentElement.onmousedown = (ev) => {
+            _dragging = true;
+            _lastX = ev.clientX;
+            _segmentElement.style.zIndex = "9999";
+        };
 
-                _self.updateInfo();
-            },
-            handles: "e,w"
-        });
+        _segmentElement.onmousemove = (ev) => {
+            if (_dragging)
+            {
+                _segmentElement.style.left =  (_segmentElement.offsetLeft - (_lastX - ev.clientX)).toString() + "px";
+                _lastX = ev.clientX;
+            } 
+        };
 
+        _segmentElement.onmouseup = (ev) => {
+            _dragging = false;
+        };
 
-        _self.updateInfo();
-        _self.hostElement.find(".segment-title").text(_self.title);
-        _self.hostElement.css("background-color", this.getRandomColor());
+        _segmentElement.onmouseout = (ev) => {
+            _dragging = false;
+        };
+        
+
+        //_self.hostElement = $("<div class=\"segment\"><span class=\"segment-title\"></span><span class=\"segment-details\"></span></div>");
+        //_self.hostElement.data("timeline-segment", _self);
+
+        // _self.hostElement.draggable({ 
+        //     axis: 'x',
+        //     containment: containerId,
+        //     drag: function() {
+        //         _self.start = _self.hostElement.position().left;
+        //         _self.end = _self.hostElement.position().left + _self.hostElement.width();
+
+        //         _self.updateInfo();
+        //     }
+        // });
+
+        // _self.hostElement.resizable({
+        //     axis: 'x',
+        //     containment: containerId,
+        //     resize: function() {
+        //         _self.start = _self.hostElement.position().left;
+        //         _self.end = _self.hostElement.position().left + _self.hostElement.width();
+
+        //         _self.updateInfo();
+        //     },
+        //     handles: "e,w"
+        // });
 
         if (updateCallback != undefined && updateCallback != null)
             this.updateCallback = updateCallback;
         else
-            this.updateCallback = function (s,e) { console.log("start: " + s + ", end:" + e ) };
+            this.updateCallback = (s,e) => { console.log("start: " + s + ", end:" + e ) };
 
         this.init();
+
+        _self.updateInfo();
     }
 
     init() {
-        this.hostElement.css("width", this.length);
-        this.hostElement.css("left", this.start);
+        this.hostElement.style.width = this.length;
+        this.hostElement.style.left = this.start;
     }
-
+ 
     updateInfo()
     {
-        this.hostElement.find(".segment-details").text("s:" + this.start + ", e:" + this.end + ", l:" + this.length);
+        //this.hostElement.find(".segment-details").text("s:" + this.start + ", e:" + this.end + ", l:" + this.length);
         
         if (this.updateCallback)
             this.updateCallback(this.start, this.end);
@@ -119,7 +154,7 @@ class Segment {
       }
 }
 
-var _t = new Timeline("#timeline-inner-container");
+var _t = new Timeline("timeline-inner-container");
 
 $(document).ready(function(){
 
@@ -143,11 +178,11 @@ $(document).ready(function(){
     });
     //_segment4.init();
 
-    $("#btnMultiLine").click(function(){
-        _t.multiline();
-    });
+    // $("#btnMultiLine").click(function(){
+    //     _t.multiline();
+    // });
     
-    $("#btnSingleLine").click(function(){
-        _t.singleline();
-    });
+    // $("#btnSingleLine").click(function(){
+    //     _t.singleline();
+    // });
 });
