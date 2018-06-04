@@ -59,10 +59,24 @@ class Segment {
         var _segmentElement = document.createElement("div");
         _segmentElement.setAttribute("class", "segment");
         
+        var _leftDragElement = document.createElement("div");
+        _leftDragElement.setAttribute("class", "segment-left-handle");
+
+        var _centerDragElement = document.createElement("div");
+        _centerDragElement.setAttribute("class", "segment-center-handle");
+
+        var _rightDragElement = document.createElement("div");
+        _rightDragElement.setAttribute("class", "segment-right-handle");
+
+        //On purpose... float right..
+        _segmentElement.appendChild(_rightDragElement);
+        _segmentElement.appendChild(_centerDragElement);
+        _segmentElement.appendChild(_leftDragElement);
+
         var _segmentTitleElement = document.createElement("span");
         _segmentTitleElement.setAttribute("class", "segment-details");
         _segmentTitleElement.innerHTML = _self.title;
-        _segmentElement.appendChild(_segmentTitleElement);
+        _centerDragElement.appendChild(_segmentTitleElement);
 
         _self.hostElement = _segmentElement
 
@@ -70,37 +84,78 @@ class Segment {
         _self.container.appendChild(_self.hostElement);
 
         var _dragging : boolean = false;
+        var _resizingLeft : boolean = false;
+        var _resizingRight : boolean = false;
+
         var _lastX : number;
+        var _lastLeftX : number;
+        var _lastRightX : number;
+
         var _initialX : number;
 
         _segmentElement.onmousedown = (ev) => {
             _dragging = true;
             _lastX = ev.clientX;
-
-            // var _allSegments = document.getElementsByClassName("segment");
-            // for(var i=0;i<_allSegments.length;i++)
-            // {
-            //     (<HTMLElement>_allSegments[i]).style.zIndex = (9999 - i).toString();
-            // }
-
-            _highestZ = _highestZ + 10;
+            _highestZ += 10;
             _segmentElement.style.zIndex = _highestZ.toString();
         }; 
+
+        _leftDragElement.addEventListener("mousedown", function (ev){
+            _resizingLeft = true;
+            _lastLeftX = ev.clientX;
+            _highestZ += 10;
+
+            ev.stopPropagation();
+        });
+
+        _leftDragElement.addEventListener("mouseup", function(ev) {
+            _resizingLeft = false;
+        });
+
+        _rightDragElement.addEventListener("mousedown", function (ev){
+            _resizingRight = true;
+            _lastRightX = ev.clientX;
+            _highestZ += 10;
+
+            ev.stopPropagation();
+        });
+
+        _rightDragElement.addEventListener("mouseup", function(ev) {
+            _resizingRight = false;
+        });
 
         _self.container.addEventListener("mousemove", function(ev) {
             if (_dragging)
             {
-                _segmentElement.style.left =  (_segmentElement.offsetLeft - (_lastX - ev.clientX)).toString() + "px";
+                _segmentElement.style.left = (_segmentElement.offsetLeft - (_lastX - ev.clientX)).toString() + "px";
+
                 _lastX = ev.clientX;
             } 
+            if (_resizingLeft)
+            {
+                _segmentElement.style.width = (_segmentElement.offsetWidth + (_lastLeftX - ev.clientX)).toString() + "px";
+                _segmentElement.style.left = (_segmentElement.offsetLeft - (_lastLeftX - ev.clientX)).toString() + "px";
+
+                _lastLeftX = ev.clientX;
+            }
+            if (_resizingRight)
+            {
+                _segmentElement.style.width = (_segmentElement.offsetWidth - (_lastRightX - ev.clientX)).toString() + "px";
+
+                _lastRightX = ev.clientX;
+            }
         });
 
         _self.container.addEventListener("mouseup", function (ev) {
             _dragging = false;
+            _resizingLeft = false;
+            _resizingRight = false;
         });
 
         _segmentElement.addEventListener("mouseup", function (ev) {
             _dragging = false;
+            _resizingLeft = false;
+            _resizingRight = false;
         });
 
         if (updateCallback != undefined && updateCallback != null)
